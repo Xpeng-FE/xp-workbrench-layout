@@ -94,6 +94,8 @@ export default defineComponent({
         onMounted(() => {
             let sidebarsubmenus = document.getElementsByClassName('sidebarsubmenu')
             for (let k = 0; k < sidebarsubmenus.length; k ++) {
+                let allClasses = sidebarsubmenus[k].getAttribute('class')?.split(' ')
+                if (allClasses?.includes('el-popper')) continue
                 let elements = sidebarsubmenus[k].getElementsByTagName('li')
                 for (let i = 0; i < elements.length; i ++) {
                     let link = getLink(elements[i].innerText)
