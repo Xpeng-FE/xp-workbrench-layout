@@ -39,4 +39,12 @@ export default {
         type: [String, Array],
         default: '',
     },
+    needClose: {
+        type: Boolean,
+        default: false,
+    },
+    needDrag: {
+        type: Boolean,
+        default: false,
+    },
 }

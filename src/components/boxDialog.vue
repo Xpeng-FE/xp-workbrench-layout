@@ -1,8 +1,13 @@
 <template>
-    <div :class="`xp-boxDialog${isList ? ' list' : ''}${className ? ' ' + (typeof className === 'string' ? className : JSON.stringify(className)) : ''}`" :data-popper-placement="dataPopperPlacement" :style="dialogStyle" ref="boxDialog">
+    <div :class="`xp-boxDialog${isList ? ' list' : ''}${className ? ' ' + (typeof className === 'string' ? className : JSON.stringify(className)) : ''}`" :data-popper-placement="dataPopperPlacement" :style="finalDialogStyle" ref="boxDialog">
         <span class="el-popper__arrow" v-if="needArrow"></span>
         <div v-if="!isList">
-            <div class="title" v-if="title !== ''">{{title}}</div>
+            <div class="title" v-if="title !== ''" @mouseenter="startFocus(true)" @mouseleave="startFocus(false)" @mousedown="starttodrag">
+                {{title}}
+                <el-icon v-if="needClose" :size="20" style="position: absolute;right: 10px; top: 10px;cursor: pointer;" @click="toClose">
+                    <CloseBold />
+                </el-icon>
+            </div>
             <div class="content">
                 <slot name="content"></slot>
             </div>
@@ -23,12 +28,19 @@
 <script lang="ts">
 import { onMounted, ref, Ref, SetupContext } from 'vue'
 import props from './props/boxDialog'
+import { ElIcon } from 'element-plus'
+import { CloseBold } from '@element-plus/icons-vue'
 export default {
     props,
-    emits: ['handleClickList'],
+    components: {
+        ElIcon,
+        CloseBold,
+    },
     setup(props: any, ctx: SetupContext< Record< string, any > >) {
         const menus: Ref< MenusList[] > = ref(props.list)
         const boxDialog: Ref< HTMLElement | undefined > = ref()
+        const finalDialogStyle: Ref< any > = ref(props.dialogStyle)
+        if (props.needDrag) finalDialogStyle.value['userSelect'] = 'none'
         onMounted(() => {
             if (props.background) 
                 boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') as string + `--bg-color: ${props.background}`)
@@ -36,11 +48,35 @@ export default {
                 boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') as string + `--box-title-bg-color: ${props.titleBg}`)
         })
         const handleClick = (code: string) => {
+            if (props.onMenu === code || (typeof props.onMenu !== 'string' && props.onMenu.indexOf(code) > -1)) return
             ctx.emit('handleClickList', code)
+        }
+        const startFocus = (isStart: boolean = true) => {
+            ctx.emit('startFocus', isStart)
+        }
+        const toClose = () => {
+            ctx.emit('toClose')
+        }
+        const starttodrag = (e: any) => {
+            if (!props.needDrag) return
+            let left = parseInt(boxDialog.value?.style.left ?? ''),
+                top = parseInt(boxDialog.value?.style.top ?? '')
+            document.onmousemove = (event: any) => {
+                boxDialog.value!.style.left = `${((left ? left : 5) + event.screenX - e.screenX)}px`
+                boxDialog.value!.style.top = `${(top ? top : 35) + event.screenY - e.screenY}px`
+            }
+            document.onmouseup = () => {
+                document.onmousemove = null
+                document.onmouseup = null
+            }
         }
         return {
             boxDialog,
+            startFocus,
             handleClick,
+            toClose,
+            starttodrag,
+            finalDialogStyle,
             menus
         }
     },
