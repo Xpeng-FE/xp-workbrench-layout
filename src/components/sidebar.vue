@@ -25,13 +25,27 @@
                     </template>
                 </el-sub-menu>
                 <el-menu-item v-else-if="item.index !== ''" :index="item.index">
-                    <el-icon>
+                    <el-popover v-if="collapse" placement="right" effect="dark" :content="item.title" popper-class="menuitempop" trigger="hover">
+                        <template #reference>
+                            <el-icon>
+                                <component :is="item.icon"/>
+                            </el-icon>
+                        </template>
+                    </el-popover>
+                    <el-icon v-else>
                         <component :is="item.icon"/>
                     </el-icon>
                     <span>{{ item.title }}</span>
                 </el-menu-item>
                 <li v-else role="menuitem" class="el-menu-item" tabindex="-1" @click="handleClick(item.link)">
-                    <el-icon>
+                    <el-popover v-if="collapse" placement="right" effect="dark" :content="item.title" popper-class="menuitempop" trigger="hover">
+                        <template #reference>
+                            <el-icon>
+                                <component :is="item.icon"/>
+                            </el-icon>
+                        </template>
+                    </el-popover>
+                    <el-icon v-else>
                         <component :is="item.icon"/>
                     </el-icon>
                     <span>{{ item.title }}</span>
@@ -43,7 +57,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
-import { ElMenu, ElMenuItem, ElSubMenu, ElIcon, } from 'element-plus'
+import { ElMenu, ElMenuItem, ElSubMenu, ElIcon, ElPopover, } from 'element-plus'
 import { useRoute } from 'vue-router'
 import bus from './bus'
 import props from './props/sidebar'
@@ -56,6 +70,7 @@ export default defineComponent({
         ElMenuItem,
         ElSubMenu,
         ElIcon,
+        ElPopover,
         ...EleIcons,
     },
     setup(props) {
