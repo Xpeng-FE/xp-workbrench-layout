@@ -1,12 +1,16 @@
 <script lang="ts">
 import { ref } from 'vue'
 import { VBoxDialog } from '../components'
+import { ElButton } from 'element-plus'
+import { useRouter } from 'vue-router'
 export default {
     name: "dashboard",
     components: {
         VBoxDialog,
+        ElButton,
     },
     setup() {
+        const router = useRouter()
         const list = ref([
             {name: '纯色地图', code: 'pure'},
             {name: '高德电子地图', code: 'gaode'},
@@ -20,11 +24,15 @@ export default {
         const toClose = () => {
             isShow.value = false
         }
+        const testHash = () => {
+            router.push('#close')
+        }
         return {
             list,
             testClick,
             toClose,
             isShow,
+            testHash,
         }
     }
 }
@@ -32,7 +40,7 @@ export default {
 <template>
     <div>
         <v-box-dialog :dialogStyle="{top: '100px',left: '100px'}" :title="'测试'">
-            <template #content>dddd</template>
+            <template #content><el-button @click="testHash" >水电方法</el-button></template>
         </v-box-dialog>
         <v-box-dialog :dialogStyle="{top: '100px',left: '500px'}" :isList="true" :list="list" :onMenu="['pure', 'gaode']" @handleClickList="testClick">
             

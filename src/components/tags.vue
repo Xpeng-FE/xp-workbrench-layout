@@ -118,7 +118,8 @@ export default {
                     let path1 = item.path?.split("?")
                     path1 = path1[0].split("/")
                     let path2 = path3[0].split("/")
-
+                    if (path1[1].includes('#')) path1[1] = path1[1].split('#')[0]
+                    if (path2[1].includes('#')) path2[1] = path2[1].split('#')[0]
                     if (path1[1] === path2[1]) {
                         item.title = routeval.meta.title
                         item.path = routeval.fullPath
