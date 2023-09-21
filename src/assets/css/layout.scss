@@ -192,6 +192,7 @@ $menuWidth: 64px;
 
 .el-popper[role=tooltip],.el-popper.user-namelogout {
     z-index: 9999999 !important;
+    pointer-events: none;
 }
 
 :root {
