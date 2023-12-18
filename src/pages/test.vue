@@ -51,5 +51,9 @@ export default {
         <v-box-dialog v-if="isShow" :needArrow="false" title="路径面板" :needClose="true" :needDrag="true" @toClose="toClose">
             <template #content>ccc</template>
         </v-box-dialog>
+        <v-box-dialog :dialogStyle="{top: '400px',left: '800px'}" :needArrow="false" title="路径面板2" :needDrag="true" @toClose="toClose">
+            <template #title>路径面板</template>
+            <template #content>cccddd</template>
+        </v-box-dialog>
     </div>
 </template>
