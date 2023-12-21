@@ -94,6 +94,19 @@ $headerheight: 50px;
         }
     }
 }
+.sidebar-el-menu {
+    li {
+        .el-menu-item {
+            &.is-disabled {
+                opacity: 1;
+                cursor: pointer;
+            }
+            &:hover {
+                background-color: var(--el-menu-hover-bg-color) !important;
+            }
+        }
+    }
+}
 
 $menuWidth: 64px;
 .content-box {
