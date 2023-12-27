@@ -53,6 +53,22 @@ export default {
                 ]
             },
             {
+                icon: "Operation",
+                index: "3",
+                title: "另外管理",
+                subs: [
+                    {
+                        index: "/propertySettingcc",
+                        title: "配色管理2",
+                        link: "http://www.baidu.com",
+                    },
+                    {
+                        index: "/propertySetting2",
+                        title: "随便",
+                    }
+                ]
+            },
+            {
                 icon: "Monitor",
                 index: "",
                 title: "测试",

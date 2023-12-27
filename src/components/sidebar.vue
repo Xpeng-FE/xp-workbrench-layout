@@ -9,6 +9,7 @@
             active-text-color="#20a0ff"
             unique-opened
             router
+            @open="openSubMenu"
         >
             <template v-for="item in items" :key="item.key">
                 <el-sub-menu v-if="item.subs" :index="item.index" popper-class="sidebarsubmenu">
@@ -56,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue'
 import { ElMenu, ElMenuItem, ElSubMenu, ElIcon, ElPopover, } from 'element-plus'
 import { useRoute } from 'vue-router'
 import bus from './bus'
@@ -78,9 +79,40 @@ export default defineComponent({
         const onRoutes = computed(() => {
             return route.path
         })
-        const collapse = ref(true);
+        const collapse = ref(true)
+        let isReadyPoperEles: boolean = false
+        const toAddListnerForMenusPoper = () => {
+            let sidebarsubmenus = document.getElementsByClassName('sidebarsubmenu')
+            for (let k = 0; k < sidebarsubmenus.length; k ++) {
+                let allClasses = sidebarsubmenus[k].getAttribute('class')?.split(' ')
+                if (allClasses?.includes('el-popper')) continue
+                let elements = sidebarsubmenus[k].getElementsByTagName('li')
+                for (let i = 0; i < elements.length; i ++) {
+                    let link = getLink(elements[i].innerText)
+                    if (link) elements[i].addEventListener('click', () => methods.handleClick(link))
+                }
+            }
+        }
+        const toAddListnerForMenus = () => {
+            let submenus: HTMLCollectionOf<Element> = document.getElementsByClassName('sidebar-el-menu')[0].getElementsByClassName('is-disabled')
+            for (let i = 0; i < submenus.length; i ++) {
+                let link = getLink(submenus[i].textContent ?? '')
+                if (link) submenus[i].addEventListener('click', () => methods.handleClick(link))
+            }
+        }
+        const checkIsHasSubs = (index: string) => {
+            let isHasSubs = false
+            for (let menu of props.items) {
+                if (menu.index === index && typeof menu.subs !== 'undefined') {
+                    isHasSubs = true
+                    break
+                }
+            }
+            return isHasSubs
+        }
         bus.on("collapse", (msg: any) => {
             collapse.value = msg
+            isReadyPoperEles = false
         })
         const methods = reactive({
             closeSidebar() {
@@ -90,7 +122,19 @@ export default defineComponent({
             handleClick(link: string | undefined) {
                 if (typeof link === 'undefined' || link === route.path) return
                 window.open(link)
-            }
+            },
+            openSubMenu(index: string) {
+                if (isReadyPoperEles) return
+                if (!collapse.value) {
+                    if (checkIsHasSubs(index)) {
+                        isReadyPoperEles = true
+                        toAddListnerForMenus()
+                    }
+                    return
+                }
+                isReadyPoperEles = true
+                toAddListnerForMenusPoper()
+            },
         })
         const getLink = (text: string) => {
             let link: any = null
@@ -106,18 +150,6 @@ export default defineComponent({
             }
             return link
         }
-        onMounted(() => {
-            let sidebarsubmenus = document.getElementsByClassName('sidebarsubmenu')
-            for (let k = 0; k < sidebarsubmenus.length; k ++) {
-                let allClasses = sidebarsubmenus[k].getAttribute('class')?.split(' ')
-                if (allClasses?.includes('el-popper')) continue
-                let elements = sidebarsubmenus[k].getElementsByTagName('li')
-                for (let i = 0; i < elements.length; i ++) {
-                    let link = getLink(elements[i].innerText)
-                    if (link) elements[i].addEventListener('click', () => methods.handleClick(link))
-                }
-            }
-        })
         return {
             onRoutes,
             collapse,
