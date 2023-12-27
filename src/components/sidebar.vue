@@ -117,6 +117,7 @@ export default defineComponent({
         const methods = reactive({
             closeSidebar() {
                 collapse.value = true
+                isReadyPoperEles = false
                 bus.emit("collapsesidebar", collapse.value)
             },
             handleClick(link: string | undefined) {
