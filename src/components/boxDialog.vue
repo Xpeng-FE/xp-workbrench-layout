@@ -2,7 +2,7 @@
     <div :class="`xp-boxDialog${isList ? ' list' : ''}${className ? ' ' + (typeof className === 'string' ? className : JSON.stringify(className)) : ''}`" :data-popper-placement="dataPopperPlacement" :style="finalDialogStyle" ref="boxDialog">
         <span class="el-popper__arrow" v-if="needArrow"></span>
         <div v-if="!isList">
-            <div class="title" v-if="$slots['title']">
+            <div class="title" v-if="$slots['title']" @mouseenter="startFocus(true)" @mouseleave="startFocus(false)" @mousedown="starttodrag">
                 <slot name="title"></slot>
                 <el-icon v-if="needClose" :size="20" style="position: absolute;right: 10px; top: 10px;cursor: pointer;" @click="toClose">
                     <CloseBold />
