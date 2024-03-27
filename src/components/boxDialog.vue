@@ -65,11 +65,13 @@ export default {
         }
         const starttodrag = (e: any) => {
             if (!props.needDrag) return
-            let left = parseInt(boxDialog.value?.style.left ?? ''),
-                top = parseInt(boxDialog.value?.style.top ?? '')
+            let left = parseInt(boxDialog.value?.style.left || boxDialog.value ? window.getComputedStyle(boxDialog.value)?.left : '' ||  ''),
+                top = parseInt(boxDialog.value?.style.top || boxDialog.value ? window.getComputedStyle(boxDialog.value)?.top : '' || '')
             document.onmousemove = (event: any) => {
                 boxDialog.value!.style.left = `${((left ? left : 5) + event.screenX - e.screenX)}px`
+                if (finalDialogStyle.value.left !== undefined) finalDialogStyle.value.left = boxDialog.value!.style.left
                 boxDialog.value!.style.top = `${(top ? top : 35) + event.screenY - e.screenY}px`
+                if (finalDialogStyle.value.top !== undefined) finalDialogStyle.value.top = boxDialog.value!.style.top
             }
             document.onmouseup = () => {
                 document.onmousemove = null
