@@ -76,6 +76,7 @@ export default {
             document.onmouseup = () => {
                 document.onmousemove = null
                 document.onmouseup = null
+                ctx.emit('endDrag')
             }
         }
         return {
