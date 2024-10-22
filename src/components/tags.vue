@@ -72,8 +72,10 @@ export default defineComponent({
         })
         const route = useRoute()
         const router = useRouter()
-        const tagToShow = ref(props.tagShow)
-        if (!props.tagShow && props.noTagsToSmall) document.documentElement.setAttribute('theme-mode', 'small')
+        const localStorage = window.localStorage
+        const showTagsVal = !!(localStorage.getItem('tagsStatus') ?? props.tagShow)
+        const tagToShow = ref(showTagsVal)
+        if (!showTagsVal && props.noTagsToSmall) document.documentElement.setAttribute('theme-mode', 'small')
         let recordStartPackUp = false
         const packup = () => {
             if (props.noTagsToSmall) document.documentElement.setAttribute('theme-mode', 'small')

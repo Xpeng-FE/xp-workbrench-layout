@@ -67,7 +67,9 @@ export default {
             return props.u_name ? props.u_name : props.name
         })
         const smallBtn = ref(props.isSmall)
-        const showExpendTagsBtn = ref(!props.showTags)
+        const localStorage = window.localStorage
+        const showTagsVal = !!(localStorage.getItem('tagsStatus') ?? props.showTags)
+        const showExpendTagsBtn = ref(!showTagsVal)
         bus.on("collapsesidebar", (msg: any) => {
             collapse.value = msg
         })
@@ -75,6 +77,7 @@ export default {
             showExpendTagsBtn.value = true
             document.getElementsByClassName('content-box')?.[0].setAttribute('style', 'padding-bottom: 0;')
             if (props.isSmall) smallBtn.value = true
+            localStorage.setItem('tagsStatus', '')
         })
         const methods = {
             // 用户名下拉菜单选择事件
@@ -102,6 +105,7 @@ export default {
                 const originStyle = dom.getAttribute('style')
                 if (originStyle) dom.setAttribute('style', originStyle.replace('padding-bottom: 0;', ''))
                 if (props.isSmall) smallBtn.value = false
+                localStorage.setItem('tagsStatus', 'show')
             }
         }
 
