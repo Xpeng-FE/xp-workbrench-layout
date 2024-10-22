@@ -1,35 +1,17 @@
 <template>
-    <div class="wrapper">
-        <v-head :collapse="collapse" name="城市地图工作台"></v-head>
-        <v-sidebar :items="items"></v-sidebar>
-        <div class="content-box" :class="{'content-collapse': collapse}">
-            <v-tags ref="smalltag"></v-tags>
-            <div class="content">
-                <router-view v-slot="{ Component }">
-                    <transition name="workbench-app" mode="out-in">
-                        <keep-alive :include="tagsList">
-                            <component :is="Component" />
-                        </keep-alive>
-                    </transition>
-                </router-view>
-            </div>
-        </div>
-    </div>
+    <v-layout name="城市地图工作台" :sideBarItems="items" :showTags="false" :noTagsSmallStyle="true">
+    </v-layout>
 </template>
 
 <script lang="ts">
 import { Ref, ref } from 'vue'
-import { VHead, VSidebar, VTags, setup as entrySetup, guid } from '../components'
+import { VLayout } from '../components'
 
 export default {
     components: {
-        VHead,
-        VSidebar,
-        VTags,
+        VLayout,
     },
     setup() {
-        const collapse = ref(true)
-        const tagsList: Ref = ref([] as any[])
         const items: Ref< RouteListItem[] > = ref([
             {
                 icon: "Monitor",
@@ -75,10 +57,7 @@ export default {
                 link: "http://www.baidu.com",
             },
         ])
-        entrySetup(collapse, tagsList)
         return {
-            collapse,
-            tagsList,
             items,
         }
     }

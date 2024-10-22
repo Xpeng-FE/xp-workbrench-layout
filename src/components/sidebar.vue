@@ -11,7 +11,7 @@
             router
             @open="openSubMenu"
         >
-            <template v-for="item in items" :key="item.key">
+            <template v-for="(item, index) in items" :key="`layoutSidebar-${index}`">
                 <el-sub-menu v-if="item.subs" :index="item.index" popper-class="sidebarsubmenu">
                     <template #title>
                         <el-icon>

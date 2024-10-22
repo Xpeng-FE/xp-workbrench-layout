@@ -1,5 +1,5 @@
 <template>
-    <div class="tags">
+    <div class="tags" v-show="tagToShow">
         <ul>
             <li
                 class="tags-li"
@@ -18,7 +18,7 @@
             </li>
         </ul>
         <div class="tags-close-box">
-            <el-dropdown @command="methods.handleTags" size="small">
+            <el-dropdown @command="methods.handleTags" size="small" @visible-change="handleVisible">
                 <el-button size="small" type="primary">
                     标签选项
                     <el-icon class="el-icon--right">
@@ -29,6 +29,7 @@
                     <el-dropdown-menu>
                         <el-dropdown-item command="other">关闭其它</el-dropdown-item>
                         <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+                        <el-dropdown-item command="packup">收起</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -37,13 +38,14 @@
 </template>
 
 <script lang="ts">
-import { computed, Ref, ref, watch } from 'vue'
+import { computed, defineComponent, nextTick, Ref, ref, watch } from 'vue'
 import { ElIcon, ElDropdown, ElDropdownMenu, ElDropdownItem, ElButton } from 'element-plus'
 import { Close, ArrowDown } from '@element-plus/icons-vue'
 import { RouteLocationNormalizedLoaded, useRoute, useRouter } from 'vue-router'
 import bus from './bus'
 
-export default {
+export default defineComponent({
+    name: "xplayouttags",
     components: {
         ElIcon,
         Close,
@@ -53,13 +55,42 @@ export default {
         ElButton,
         ArrowDown,
     },
-    setup() {
+    props: {
+        tagShow: {
+            type: Boolean,
+            default: true,
+        },
+        noTagsToSmall: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    setup(props) {
         const tagsList: Ref<TagsListItem[]> = ref([])
         const showTags = computed(() => {
             return tagsList.value.length > 0
         })
         const route = useRoute()
         const router = useRouter()
+        const tagToShow = ref(props.tagShow)
+        if (!props.tagShow && props.noTagsToSmall) document.documentElement.setAttribute('theme-mode', 'small')
+        let recordStartPackUp = false
+        const packup = () => {
+            if (props.noTagsToSmall) document.documentElement.setAttribute('theme-mode', 'small')
+            recordStartPackUp = true
+        }
+        bus.on('expandTags', () => {
+            if (props.noTagsToSmall) document.documentElement.removeAttribute('theme-mode')
+            tagToShow.value = true
+        })
+        const handleVisible = () => {
+            if (!recordStartPackUp) return
+            nextTick(() => {
+                tagToShow.value = false
+                bus.emit("packupTags")
+                recordStartPackUp = false
+            })
+        }
         const methods = {
             isActive(path: String) {
                 let path1 = path.split("/")
@@ -140,7 +171,17 @@ export default {
                 bus.emit("tags", tagsList.value);
             },
             handleTags(command: string) {
-                command === "other" ? methods.closeOther() : methods.closeAll();
+                switch (command) {
+                    case "other":
+                        methods.closeOther()
+                        break
+                    case "all":
+                        methods.closeAll()
+                        break
+                    case "packup":
+                        packup()
+                        break
+                }
             }
         }
         methods.setTags(route)
@@ -152,7 +193,9 @@ export default {
             tagsList,
             showTags,
             methods,
+            tagToShow,
+            handleVisible,
         }
     },
-}
+})
 </script>

@@ -13,36 +13,66 @@ body {
 a {
     text-decoration: none
 }
-$headerheight: 50px;
+:root {
+    --header-height: 50px;
+    --header-font-size: 22px;
+    --collapse-btn-padding: 21px;
+    --collapse-btn-line-height: 50px;
+    --logo-line-height: 45px;
+    --logo-padding-left: 0;
+    --username-font-size: var(--el-font-size-base);
+    --content-box-padding-bottom: 30px;
+    --tags-height: 30px;
+    --tags-li-height: 23px;
+    --tags-close-box-height: 30px;
+    --tags-close-box-el-drop-down-margin-top: 0;
+    --tags-close-box-el-drop-down-button-height: var(--el-button-size);
+}
+:root[theme-mode="small"] {
+    --header-height: 30px;
+    --header-font-size: 16px;
+    --collapse-btn-padding: 24px;
+    --collapse-btn-line-height: 40px;
+    --logo-line-height: 30px;
+    --logo-padding-left: 10px;
+    --username-font-size: 12px;
+    --content-box-padding-bottom: 25px;
+    --tags-height: 25px;
+    --tags-li-height: 16px;
+    --tags-close-box-height: 25px;
+    --tags-close-box-el-drop-down-margin-top: 1px;
+    --tags-close-box-el-drop-down-button-height: 20px;
+}
 .header {
     background-color: #404040;
     color: #fff;
-    height:$headerheight;
+    height: var(--header-height);
     position: relative;
     box-sizing: border-box;
     width: 100vw;
-    font-size: 22px;
+    font-size: var(--header-font-size);
     .collapse-btn {
         float: left;
-        padding: 0 21px;
+        padding: 0 var(--collapse-btn-padding);
         cursor: pointer;
-        line-height: $headerheight;
+        line-height: var(--collapse-btn-line-height);
         &:hover {
             background: #333;
         }
     }
     .logo {
         float: left;
-        line-height: 45px;
+        line-height: var(--logo-line-height);
+        padding-left: var(--logo-padding-left);
     }
     .header-right {
         float: right;
-        padding-right: $headerheight;
+        padding-right: var(--header-height);
         .header-user-con {
             display: flex;
-            height: 50px;
+            height: var(--header-height);
             align-items: center;
-            .btn-fullscreen {
+            .btn-fullscreen, .btn-expandTags {
                 transform: rotate(45deg);
                 margin-right: 5px;
                 margin-top: 3px;
@@ -54,8 +84,15 @@ $headerheight: 50px;
                 border-radius: 15px;
                 cursor: pointer;
             }
+            .btn-expandTags {
+                transform: rotate(0deg);
+                font-size: 18px;
+                width: 22px;
+                height: 22px;
+            }
             .user-name {
                 margin-left: 10px;
+                font-size: var(--username-font-size);
                 .el-dropdown-link {
                     color: #fff;
                     cursor: pointer;
@@ -70,7 +107,7 @@ $headerheight: 50px;
     display: block;
     position: absolute;
     left: 0;
-    top: $headerheight;
+    top: var(--header-height);
     bottom: 0;
     overflow-y: scroll;
     &::-webkit-scrollbar {
@@ -113,15 +150,15 @@ $menuWidth: 64px;
     position: absolute;
     left: $menuWidth;
     right: 0;
-    top: $headerheight;
+    top: var(--header-height);
     bottom: 0;
-    padding-bottom: 30px;
+    padding-bottom: var(--content-box-padding-bottom);
     // -webkit-transition: left .3s ease-in-out;
     // transition: left .3s ease-in-out;
     background: #f0f0f0;
     .tags {
         position: relative;
-        height: 30px;
+        height: var(--tags-height);
         overflow: hidden;
         background: #fff;
         padding-right: 120px;
@@ -138,8 +175,8 @@ $menuWidth: 64px;
                 font-size: 12px;
                 overflow: hidden;
                 cursor: pointer;
-                height: 23px;
-                line-height: 23px;
+                height: var(--tags-li-height);
+                line-height: var(--tags-li-height);
                 border: 1px solid #e9eaec;
                 background: #fff;
                 padding: 0 5px 0 12px;
@@ -178,10 +215,16 @@ $menuWidth: 64px;
             padding-top: 1px;
             text-align: center;
             width: 110px;
-            height: 30px;
+            height: var(--tags-close-box-height);
             background: #fff;
             box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
             z-index: 10;
+            .el-dropdown {
+                margin-top: var(--tags-close-box-el-drop-down-margin-top);
+                .el-button {
+                    height: var(--tags-close-box-el-drop-down-button-height);
+                }
+            }
         }
     }
     .content {

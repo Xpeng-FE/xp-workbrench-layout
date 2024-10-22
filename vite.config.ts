@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import * as styleImport from 'vite-plugin-style-import'
 import { resolve } from 'path'
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 const pathResolve = (dir: string) => {
@@ -14,6 +15,13 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    dts({
+      outDir: ['dist/@types'],
+      tsconfigPath: resolve(__dirname, 'tsconfig.json'),
+      entryRoot: 'src',
+      include: ['src/env.d.ts'],
+      copyDtsFiles: true
+    }),
     createSvgIconsPlugin({
       iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
       symbolId: 'icon-[dir]-[name]',

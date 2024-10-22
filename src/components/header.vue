@@ -9,6 +9,11 @@
         <div class="logo">{{name}}</div>
         <div class="header-right">
             <div class="header-user-con">
+                <div class="btn-expandTags" v-if="showExpendTagsBtn" @click="methods.handleExpandTags">
+                    <el-tooltip effect="dark" content="展开标签">
+                        <el-icon><CollectionTag /></el-icon>
+                    </el-tooltip>
+                </div>
                 <!-- 全屏显示 -->
                 <div class="btn-fullscreen" @click="methods.handleFullScreen">
                     <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
@@ -17,7 +22,7 @@
                         </el-icon>
                     </el-tooltip>
                 </div>
-                <el-dropdown class="user-name" role="tooltip" popper-class="user-namelogout" trigger="click" @command="methods.handleCommand">
+                <el-dropdown :size="smallBtn ? 'small' : ''" class="user-name" role="tooltip" popper-class="user-namelogout" trigger="click" @command="methods.handleCommand">
                     <span class="el-dropdown-link">
                         {{username}}
                         <el-icon>
@@ -38,7 +43,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue'
 import {ElTooltip, ElDropdown, ElDropdownMenu, ElDropdownItem, ElIcon} from 'element-plus'
-import {Menu, Rank, CaretBottom} from '@element-plus/icons-vue'
+import {Menu, Rank, CaretBottom, CollectionTag} from '@element-plus/icons-vue'
 import props from './props/header'
 import bus from './bus'
 export default {
@@ -51,6 +56,7 @@ export default {
         Menu,
         Rank,
         CaretBottom,
+        CollectionTag,
     },
     props,
     emits: ['logout'],
@@ -60,14 +66,20 @@ export default {
         const username = computed(() => {
             return props.u_name ? props.u_name : props.name
         })
+        const smallBtn = ref(props.isSmall)
+        const showExpendTagsBtn = ref(!props.showTags)
         bus.on("collapsesidebar", (msg: any) => {
             collapse.value = msg
+        })
+        bus.on("packupTags", () => {
+            showExpendTagsBtn.value = true
+            document.getElementsByClassName('content-box')?.[0].setAttribute('style', 'padding-bottom: 0;')
+            if (props.isSmall) smallBtn.value = true
         })
         const methods = {
             // 用户名下拉菜单选择事件
             handleCommand(command: String) {
-                if (command == "loginout")
-                    ctx.emit('logout');
+                if (command == "loginout") ctx.emit('logout')
             },
             // 侧边栏折叠
             collapseChage() {
@@ -82,6 +94,14 @@ export default {
                 else
                     element.requestFullscreen()
                 fullscreen.value = !fullscreen.value
+            },
+            handleExpandTags() {
+                showExpendTagsBtn.value = false
+                bus.emit("expandTags")
+                const dom = document.getElementsByClassName('content-box')?.[0]
+                const originStyle = dom.getAttribute('style')
+                if (originStyle) dom.setAttribute('style', originStyle.replace('padding-bottom: 0;', ''))
+                if (props.isSmall) smallBtn.value = false
             }
         }
 
@@ -89,7 +109,9 @@ export default {
             fullscreen,
             collapse,
             username,
-            methods
+            methods,
+            showExpendTagsBtn,
+            smallBtn,
         }
     }
 }

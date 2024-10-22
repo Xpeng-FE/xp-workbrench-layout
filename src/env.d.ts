@@ -13,19 +13,17 @@ declare interface TagsListItem {
     name?: string | undefined,
     key?: any,
 }
-
+/** 菜单子目录跳转 */
 declare interface SubRouteListItem {
     index: string,
     title: string,
     link?: string,
+    variable?: boolean
 }
-
-declare interface RouteListItem {
-    icon: string,
-    index: string,
-    title: string,
-    link?: string,
-    subs?: SubRouteListItem[],
+/** 菜单目录，配置文件中的variable会被delete */
+declare interface RouteListItem extends SubRouteListItem {
+    icon: string
+    subs?: SubRouteListItem[]
 }
 
 declare interface DelItem {

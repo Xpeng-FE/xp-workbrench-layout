@@ -10,5 +10,13 @@ export default {
     u_name: {
         type: String,
         default: "",
-    }
+    },
+    showTags: {
+        type: Boolean,
+        default: true,
+    },
+    isSmall: {
+        type: Boolean,
+        default: false,
+    },
 }

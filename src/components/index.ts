@@ -3,9 +3,9 @@ import bus from "./bus"
 import '@/assets/css/layout.scss';
 import '@/assets/css/boxDialog.scss';
 
-export const setup = (collapse: Ref, tagsList: Ref) => {
-    bus.on('collapse', (msg: any) => {
-        collapse.value = msg
+export const setup = (collapse: boolean, tagsList: Ref) => {
+    bus.on('collapse', (msg) => {
+        collapse = msg as boolean
     })
     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
     bus.on('tags', (msg: any) => {
@@ -26,4 +26,5 @@ export { default as VSidebar } from "./sidebar.vue"
 export { default as VTags } from "./tags.vue"
 export { default as VBoxDialog } from "./boxDialog.vue"
 export { default as bus } from "./bus"
+export { default as VLayout } from "./layout.vue"
 export { guid } from './guid'
