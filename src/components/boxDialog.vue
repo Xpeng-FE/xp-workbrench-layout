@@ -32,26 +32,26 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, Ref, SetupContext } from 'vue'
+import { defineComponent, onMounted, ref, Ref } from 'vue'
 import props from './props/boxDialog'
 import { ElIcon } from 'element-plus'
 import { CloseBold } from '@element-plus/icons-vue'
-export default {
+export default defineComponent({
     props,
     components: {
         ElIcon,
         CloseBold,
     },
-    setup(props: any, ctx: SetupContext< Record< string, any > >) {
+    setup(props, ctx) {
         const menus: Ref< MenusList[] > = ref(props.list)
         const boxDialog: Ref< HTMLElement | undefined > = ref()
-        const finalDialogStyle: Ref< any > = ref(props.dialogStyle)
+        const finalDialogStyle = ref(props.dialogStyle)
         if (props.needDrag) finalDialogStyle.value['userSelect'] = 'none'
         onMounted(() => {
             if (props.background) 
-                boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') as string + `--bg-color: ${props.background}`)
+                boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') + `--bg-color: ${props.background}`)
             if (props.titleBg)
-                boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') as string + `--box-title-bg-color: ${props.titleBg}`)
+                boxDialog.value?.setAttribute('style', boxDialog.value?.getAttribute('style') + `--box-title-bg-color: ${props.titleBg}`)
         })
         const handleClick = (code: string) => {
             if (props.onMenu === code || (typeof props.onMenu !== 'string' && props.onMenu.indexOf(code) > -1)) return
@@ -63,11 +63,11 @@ export default {
         const toClose = () => {
             ctx.emit('toClose')
         }
-        const starttodrag = (e: any) => {
+        const starttodrag = (e: MouseEvent) => {
             if (!props.needDrag) return
-            let left = parseInt(boxDialog.value?.style.left || boxDialog.value ? window.getComputedStyle(boxDialog.value)?.left : '' ||  ''),
-                top = parseInt(boxDialog.value?.style.top || boxDialog.value ? window.getComputedStyle(boxDialog.value)?.top : '' || '')
-            document.onmousemove = (event: any) => {
+            let left = parseInt(boxDialog.value?.style.left || (boxDialog.value ? window.getComputedStyle(boxDialog.value)?.left : '0')),
+                top = parseInt(boxDialog.value?.style.top || (boxDialog.value ? window.getComputedStyle(boxDialog.value)?.top : '0'))
+            document.onmousemove = (event) => {
                 boxDialog.value!.style.left = `${((left ? left : 5) + event.screenX - e.screenX)}px`
                 if (finalDialogStyle.value.left !== undefined) finalDialogStyle.value.left = boxDialog.value!.style.left
                 boxDialog.value!.style.top = `${(top ? top : 35) + event.screenY - e.screenY}px`
@@ -89,7 +89,7 @@ export default {
             menus
         }
     },
-}
+})
 </script>
 
 <style lang="scss" scoped>

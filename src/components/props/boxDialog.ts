@@ -1,3 +1,5 @@
+import { PropType } from "vue";
+
 export default {
     dataPopperPlacement: {
         type: String,
@@ -8,7 +10,7 @@ export default {
         default: true,
     },
     dialogStyle: {
-        type: Object,
+        type: Object as PropType<StyleObj>,
         default: {},
     },
     background: {
@@ -28,7 +30,7 @@ export default {
         default: false,
     },
     list: {
-        type: Array,
+        type: Array<MenusList>,
         default: [],
     },
     onMenu: {

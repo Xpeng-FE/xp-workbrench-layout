@@ -41,12 +41,12 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import {ElTooltip, ElDropdown, ElDropdownMenu, ElDropdownItem, ElIcon} from 'element-plus'
 import {Menu, Rank, CaretBottom, CollectionTag} from '@element-plus/icons-vue'
 import props from './props/header'
 import bus from './bus'
-export default {
+export default defineComponent({
     components: {
         ElTooltip,
         ElDropdown,
@@ -60,7 +60,7 @@ export default {
     },
     props,
     emits: ['logout'],
-    setup(props: any, ctx: any) {
+    setup(props, ctx) {
         const collapse = ref(true)
         const fullscreen = ref(false)
         const username = computed(() => {
@@ -118,5 +118,5 @@ export default {
             smallBtn,
         }
     }
-}
+})
 </script>

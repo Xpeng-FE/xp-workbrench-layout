@@ -156,7 +156,7 @@ export default defineComponent({
                     if (path1[1] === path2[1]) {
                         item.title = routeval.meta.title
                         item.path = routeval.fullPath
-                        item.name = routeval.matched[1].components.default.name
+                        item.name = routeval.matched[1].components?.default.name
                     }
                     return path1[1] === path2[1]
                 });

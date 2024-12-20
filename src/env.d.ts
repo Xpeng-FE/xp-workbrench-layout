@@ -22,7 +22,7 @@ declare interface SubRouteListItem {
 }
 /** 菜单目录，配置文件中的variable会被delete */
 declare interface RouteListItem extends SubRouteListItem {
-    icon: string
+    icon: keyof typeof import('@element-plus/icons-vue')
     subs?: SubRouteListItem[]
 }
 
@@ -35,3 +35,4 @@ declare interface MenusList {
     code: string,
     key?: string,
 }
+declare type StyleObj<S extends object = Record<string, any>> = S

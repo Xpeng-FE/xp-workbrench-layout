@@ -20,16 +20,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { VHead, VSidebar, VTags, setup as entrySetup } from './'
 import props from './props/layout'
 
 export default defineComponent({
-    components: {VHead, VSidebar, VTags},
+    components: { VHead, VSidebar, VTags },
     props,
     emits: ['logout'],
     setup(props, ctx) {
-        const tagsList: Ref = ref([] as any[])
+        const tagsList = ref([] as any[])
         entrySetup(props.collapse, tagsList)
         const logout = () => ctx.emit('logout')
         return { tagsList, logout }
